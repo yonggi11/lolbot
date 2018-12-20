@@ -1,13 +1,3 @@
-def add(x,y):
-    return x+y
-
-print(add(3,2))
-
-####addddddd
-def sub(x,y):
-    return x-y
-print(sub(3,2))
-
 # -*- coding: utf-8 -*-
 import json
 import os
@@ -27,83 +17,7 @@ slack_client_secret = '5aeb8d80bb6d2fa0803f580640f8cec8'
 slack_verification = '7VjlCtOHvwz0A9rH1HbBm2Ec'
 sc = SlackClient(slack_token)
 
-
-# 크롤링 함수 구현하기
-def _crawl_naver_keywords(text):
-    # 여기에 함수를 구현해봅시다.
-   #
-   #  text = re.sub(r'<@\S+> ', '', text)
-   #
-   #  # URL 데이터를 가져올 사이트 url 입력
-   #  if "월요일 웹툰" in text:
-   #      url = "https://m.comic.naver.com/webtoon/weekday.nhn?week=mon"
-   #  elif "화요일 웹툰" in text:
-   #      url = "https://m.comic.naver.com/webtoon/weekday.nhn?week=tue"
-   #  elif "수요일 웹툰" in text:
-   #      url = "https://m.comic.naver.com/webtoon/weekday.nhn?week=wed"
-   #  elif "목요일 웹툰" in text:
-   #      url = "https://m.comic.naver.com/webtoon/weekday.nhn?week=thu"
-   #  elif "금요일 웹툰" in text:
-   #      url = "https://m.comic.naver.com/webtoon/weekday.nhn?week=fri"
-   #  elif "토요일 웹툰" in text:
-   #      url = "https://m.comic.naver.com/webtoon/weekday.nhn?week=sat"
-   #  elif "일요일 웹툰" in text:
-   #      url = "https://m.comic.naver.com/webtoon/weekday.nhn?week=sun"
-   #  else:
-   #      return u"유효하지 않은 주소"
-   #  sourceCode = urllib.request.urlopen(url).read()
-   #  # URL 주소에 있는 HTML 코드를 soup에 저장합니다.
-   #  soup = BeautifulSoup(sourceCode, "html.parser")
-   #  # print(soup)
-   #  # result_t1=soup.find_all("strong",class_="point")
-   #  # print (result_t1)
-   #  keyword_list = []
-   #  title_list = []
-   #  name_list = []
-   #
-   #  for keyword in soup.find_all("span", class_="txt_score"): # 별점 추출
-   #      keyword_list.append(keyword.get_text())
-   #  for title in soup.find_all("span", class_="toon_name"):   #웹툰 네임 추출
-   #      title_list.append(title.get_text())
-   #  for title in soup.find_all("p", class_="sub_info"):       #웹툰 작가 정보
-   #      name_list.append(title.get_text())
-   #  result = []
-   #  for i in range(len(keyword_list)):
-   #      result.append(title_list[i] + " " + keyword_list[i] + " " + name_list[i])
-   #  # return u'\n'.join(result)
-   #
-   # # print(title_list)
-   #  diction=zip(title_list,keyword_list)
-   #  list(diction)
-   #
-   #
-   #  return u'\n'.join(result)
-    # # 한글 지원을 위해 앞에 unicode u를 붙혀준다.
-    # return u'\n'.join(keywords)
-#웹툰 추천 상위 (별점 별 , 조회수 별)
-# def _crawl_wb_recom(text):
-
-
-# 이벤트 핸들하는 함수
-    text = re.sub(r'<@\S+> ', '', text)
-    # URL 데이터를 가져올 사이트 url 입력
-    if "월요일 웹툰" in text:
-        url = "https://m.comic.naver.com/webtoon/weekday.nhn?week=mon"
-    elif "화요일 웹툰" in text:
-        url = "https://m.comic.naver.com/webtoon/weekday.nhn?week=tue"
-    elif "수요일 웹툰" in text:
-        url = "https://m.comic.naver.com/webtoon/weekday.nhn?week=wed"
-    elif "목요일 웹툰" in text:
-        url = "https://m.comic.naver.com/webtoon/weekday.nhn?week=thu"
-    elif "금요일 웹툰" in text:
-        url = "https://m.comic.naver.com/webtoon/weekday.nhn?week=fri"
-    elif "토요일 웹툰" in text:
-        url = "https://m.comic.naver.com/webtoon/weekday.nhn?week=sat"
-    elif "일요일 웹툰" in text:
-        url = "https://m.comic.naver.com/webtoon/weekday.nhn?week=sun"
-    else:
-        return u"유효하지 않은 주소"
-
+def recommend_webtoon(url):
     sourceCode = urllib.request.urlopen(url).read()
     # URL 주소에 있는 HTML 코드를 soup에 저장합니다.
     soup = BeautifulSoup(sourceCode, "html.parser")
@@ -111,32 +25,67 @@ def _crawl_naver_keywords(text):
     # result_t1=soup.find_all("strong",class_="point")
     # print (result_t1)
 
-    keyword_list = []
+    score_list = []
     title_list = []
     name_list = []
 
-    for keyword in soup.find_all("span", class_="txt_score"):
-        keyword_list.append(keyword.get_text())
+    for score in soup.find_all("span", class_="txt_score"):
+        score_list.append(score.get_text())
     for title in soup.find_all("span", class_="toon_name"):
         title_list.append(title.get_text())
-    for title in soup.find_all("p", class_="sub_info"):
-        name_list.append(title.get_text())
+    for name in soup.find_all("p", class_="sub_info"):
+        name_list.append(name.get_text())
+
+    score_title_name = []
+
+    for i in range(len(score_list)):
+        score_title_name.append((score_list[i], title_list[i], name_list[i]) )
+
+    score_title_name_sorted = sorted(score_title_name, key=lambda a: a[0], reverse=True)
 
     result = []
 
-    # for i in range(len(keyword_list)):
-    #     result.append(title_list[i] + " " + keyword_list[i] + " " + name_list[i])
-    # webtoon_point = []
-#############요일별 웹툰 추천 ##
-    for i in range(len(keyword_list)):
-        result.append((keyword_list[i], title_list[i]))
-    result = sorted(result, key=lambda a: a[0], reverse=True)
-    print(result)
-    result_final = []
     for i in range(10):
-       result_final.append(result[i][0] + " " +result[i][1])
+        result.append(score_title_name_sorted[i][0] + " " + score_title_name_sorted[i][1] + " " + score_title_name_sorted[i][2])
 
-    return u'\n'.join(result_final)
+    return result
+# 크롤링 함수 구현하기
+def _crawl_naver_keywords(text):
+
+    text = re.sub(r'<@\S+> ', '', text)
+    # URL 데이터를 가져올 사이트 url 입력
+
+    if "요일" in text:
+        if "추천" in text :
+            if "월요일" in text:
+                url = "https://m.comic.naver.com/webtoon/weekday.nhn?week=mon"
+                result = recommend_webtoon(url)
+            elif "화요일" in text:
+                url = "https://m.comic.naver.com/webtoon/weekday.nhn?week=tue"
+                result = recommend_webtoon(url)
+            elif "수요일" in text:
+                url = "https://m.comic.naver.com/webtoon/weekday.nhn?week=wed"
+                result = recommend_webtoon(url)
+            elif "목요일" in text:
+                url = "https://m.comic.naver.com/webtoon/weekday.nhn?week=thu"
+                result = recommend_webtoon(url)
+            elif "금요일" in text:
+                url = "https://m.comic.naver.com/webtoon/weekday.nhn?week=fri"
+                result = recommend_webtoon(url)
+            elif "토요일" in text:
+                url = "https://m.comic.naver.com/webtoon/weekday.nhn?week=sat"
+                result = recommend_webtoon(url)
+            elif "일요일" in text:
+                url = "https://m.comic.naver.com/webtoon/weekday.nhn?week=sun"
+                result = recommend_webtoon(url)
+            else:
+                return u"유효하지 않은 주소"
+    elif "완결" in text:
+        pass
+    else :
+        return "유효하지 않은 명령어입니다."
+
+    return u'\n'.join(result)
 
 def _event_handler(event_type, slack_event):
     print(slack_event["event"])
