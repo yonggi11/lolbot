@@ -21,7 +21,7 @@ slack_client_id = "502761537154.507489582978"
 slack_client_secret = "0ddac4c9871a348260ed98f7930add1d"
 slack_verification = "QNcuMRrBw2DVB0QewKmUXvEY"
 sc = SlackClient(slack_token)
-# 크롤링 함수 구현하기
+크롤링 함수 구현하기
 def _crawl_naver_keywords(text):
     result = []
 
