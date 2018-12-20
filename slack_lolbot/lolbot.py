@@ -16,8 +16,11 @@ app = Flask(__name__)
 # slack_client_secret =
 # slack_verification =
 # sc = SlackClient(slack_token)
-
-
+slack_token = "xoxb-502761537154-507493624130-RaCypj9SuSAXW6MyR9hWZBXd"
+slack_client_id = "502761537154.507489582978"
+slack_client_secret = "0ddac4c9871a348260ed98f7930add1d"
+slack_verification = "QNcuMRrBw2DVB0QewKmUXvEY"
+sc = SlackClient(slack_token)
 # 크롤링 함수 구현하기
 def _crawl_naver_keywords(text):
     result = []
