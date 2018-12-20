@@ -54,6 +54,7 @@ def _crawl_naver_keywords(text):
 
     text = re.sub(r'<@\S+> ', '', text)
     # URL 데이터를 가져올 사이트 url 입력
+    result = []
 
     if "요일" in text:
         if "추천" in text :
@@ -80,8 +81,22 @@ def _crawl_naver_keywords(text):
                 result = recommend_webtoon(url)
             else:
                 return u"유효하지 않은 주소"
+
     elif "완결" in text:
-        pass
+        url = "https://m.comic.naver.com/webtoon/finish.nhn?page=1&sort=HIT"
+
+        sourceCode = urllib.request.urlopen(url).read()
+        soup = BeautifulSoup(sourceCode, "html.parser")
+
+        complete_webtoons = []
+
+        for webtoon in soup.find_all("span", class_="toon_name"):
+            complete_webtoons.append(webtoon.get_text())
+
+        result = ["조회순가 높은 순서로 보여드리겠습니다.\n"]
+
+        for i in range(10):
+            result.append(str(i + 1) + "위 " + complete_webtoons[i])
     else :
         return "유효하지 않은 명령어입니다."
 
