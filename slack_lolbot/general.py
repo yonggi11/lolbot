@@ -10,11 +10,11 @@ from flask import Flask, request, make_response, render_template
 
 app = Flask(__name__)
 
-slack_token = "xoxb-502761537154-506888988689-b7E6bbYgy6Zyj9qhAczX0B3s"  # slack bot User OAuth Acess Token, slack App -permissions
+slack_token = ""  # slack bot User OAuth Acess Token, slack App -permissions
 # slack App- basic information
-slack_client_id = '502761537154.506886203489'
-slack_client_secret = '5aeb8d80bb6d2fa0803f580640f8cec8'
-slack_verification = '7VjlCtOHvwz0A9rH1HbBm2Ec'
+slack_client_id = ''
+slack_client_secret = ''
+slack_verification = ''
 sc = SlackClient(slack_token)
 
 def recommend_webtoon(url):
